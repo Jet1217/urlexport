@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: pdfexport
+    env: docker
+    plan: starter
+    healthCheckPath: /health
+    scaling:
+      minInstances: 1
+      maxInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/google-chrome-stable 

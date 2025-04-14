@@ -1,0 +1,33 @@
+{
+  "name": "pdfexport",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js"
+  },
+  "keywords": [
+    "pdf",
+    "export",
+    "image",
+    "puppeteer",
+    "screenshot"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "A service to export websites as PDF or image files",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "puppeteer": "^21.5.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
