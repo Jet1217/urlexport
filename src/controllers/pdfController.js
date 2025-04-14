@@ -30,6 +30,26 @@ const exportPDF = async (req, res) => {
             page = await setupPage(browser, url);
             console.log('Page setup completed');
 
+            // 增加页面初始化后的等待时间，确保JavaScript完全执行和图标加载
+            await new Promise(resolve => setTimeout(resolve, 8000));
+
+            // 确认所有图标和字体已加载
+            await page.evaluate(() => {
+                return new Promise((resolve) => {
+                    // 检查字体是否已加载
+                    if (document.fonts && typeof document.fonts.ready === 'object') {
+                        document.fonts.ready.then(() => {
+                            console.log('Fonts are ready for PDF generation');
+                            // 额外等待图标字体渲染
+                            setTimeout(resolve, 2000);
+                        });
+                    } else {
+                        // 如果浏览器不支持fonts API，使用延时
+                        setTimeout(resolve, 3000);
+                    }
+                });
+            });
+
             // 获取页面尺寸，以确定PDF设置
             const dimensions = await page.evaluate(() => {
                 return {
@@ -77,6 +97,11 @@ const exportPDF = async (req, res) => {
                 // 确保捕获所有页面内容
                 pageRanges: `1-${Math.min(pageCount + 5, 100)}`, // 设置页码范围，多设置几页以防万一
                 timeout: 60000, // 增加超时时间，以便字体处理
+                // Add better quality settings
+                omitBackground: false,
+                printBackground: true,
+                // Force higher quality for PDF output
+                quality: 100,
             });
 
             console.log('PDF generated successfully');

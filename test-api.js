@@ -54,7 +54,7 @@ function testHealth() {
 function testPdfExport() {
     console.log('\nTesting PDF export endpoint...');
 
-    const testUrl = 'https://hihdlsso.gleancard.com/';
+    const testUrl = 'https://wwyvjsta.gleancard.com/';
     const filename = 'test-example.pdf';
     const outputPath = path.join(outputDir, filename);
 
@@ -109,7 +109,7 @@ function testPdfExport() {
 function testImageExport() {
     console.log('\nTesting Image export endpoint...');
 
-    const testUrl = 'https://hihdlsso.gleancard.com/';
+    const testUrl = 'https://wwyvjsta.gleancard.com/';
     const filename = 'test-example.png';
     const outputPath = path.join(outputDir, filename);
 

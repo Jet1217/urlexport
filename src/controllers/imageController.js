@@ -33,6 +33,26 @@ const exportImage = async (req, res) => {
             page = await setupPage(browser, url);
             console.log('Page setup completed');
 
+            // 增加页面初始化后的等待时间，确保JavaScript完全执行和图标加载
+            await new Promise(resolve => setTimeout(resolve, 8000));
+
+            // 确认所有图标和字体已加载
+            await page.evaluate(() => {
+                return new Promise((resolve) => {
+                    // 检查字体是否已加载
+                    if (document.fonts && typeof document.fonts.ready === 'object') {
+                        document.fonts.ready.then(() => {
+                            console.log('Fonts are ready for image generation');
+                            // 额外等待图标字体渲染
+                            setTimeout(resolve, 2000);
+                        });
+                    } else {
+                        // 如果浏览器不支持fonts API，使用延时
+                        setTimeout(resolve, 3000);
+                    }
+                });
+            });
+
             // 获取页面实际尺寸
             const dimensions = await page.evaluate(() => {
                 return {
@@ -57,7 +77,7 @@ const exportImage = async (req, res) => {
             await page.setViewport({
                 width: Math.min(dimensions.width || 1200, 1920),  // Cap width to reasonable size
                 height: Math.min(dimensions.height || 800, 30000),  // 增加最大高度限制，确保长页面可以被完整捕获
-                deviceScaleFactor: 1.5,  // Higher quality
+                deviceScaleFactor: 2.0,  // Higher quality for icons and fonts
             });
 
             // Generate screenshot with enhanced options
@@ -66,8 +86,10 @@ const exportImage = async (req, res) => {
                 fullPage: isFullPage,
                 type: imageFormat,
                 omitBackground: false,
-                quality: imageFormat === 'jpeg' ? 90 : undefined,
-                captureBeyondViewport: true  // 捕获视口之外的内容
+                quality: imageFormat === 'jpeg' ? 100 : undefined,
+                captureBeyondViewport: true,  // 捕获视口之外的内容
+                // Ensure better icon rendering
+                encoding: 'binary'
             });
 
             console.log('Screenshot generated successfully');
