@@ -6,7 +6,9 @@ services:
     healthCheckPath: /health
     scaling:
       minInstances: 1
-      maxInstances: 1
+      maxInstances: 2
+      targetCPUPercent: 80
+      targetMemoryPercent: 80
     envVars:
       - key: NODE_ENV
         value: production
