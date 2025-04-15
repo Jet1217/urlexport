@@ -3,8 +3,16 @@ const puppeteer = require('puppeteer');
 // Launch options for Puppeteer that work well on Render
 const getBrowser = async () => {
     const isDev = process.env.NODE_ENV === 'development';
+
+    // Parse additional Chrome args from environment variable if available
+    let additionalArgs = [];
+    if (process.env.CHROME_LAUNCH_ARGS) {
+        additionalArgs = process.env.CHROME_LAUNCH_ARGS.split(',');
+        console.log('Using additional Chrome args from env:', additionalArgs);
+    }
+
     const options = {
-        headless: true,
+        headless: 'new', // Use the new headless mode
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -20,7 +28,11 @@ const getBrowser = async () => {
             // Ensure font loading works
             '--enable-remote-fonts',
             // Increase memory to prevent OOM issues
-            '--js-flags=--max-old-space-size=2048'
+            '--js-flags=--max-old-space-size=2048',
+            // Add single-process mode to fix QEMU issues
+            '--single-process',
+            // Add additional args from environment
+            ...additionalArgs
         ],
         ignoreHTTPSErrors: true,
         // Add font rendering options
@@ -29,11 +41,10 @@ const getBrowser = async () => {
         timeout: 60000
     };
 
-    // In production, use single-process mode and specific executable path if available
-    if (!isDev) {
-        if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-            options.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-        }
+    // In production, use specific executable path if available
+    if (!isDev && process.env.PUPPETEER_EXECUTABLE_PATH) {
+        options.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+        console.log(`Using Chrome at: ${process.env.PUPPETEER_EXECUTABLE_PATH}`);
     }
 
     console.log('Launching browser with options:', JSON.stringify(options, null, 2));
