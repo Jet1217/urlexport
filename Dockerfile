@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install Chromium dependencies
+# Install Chromium dependencies and Chinese fonts
 RUN apt-get update \
     && apt-get install -y \
     libglib2.0-0 \
@@ -18,6 +18,9 @@ RUN apt-get update \
     libpango-1.0-0 \
     libcairo2 \
     libasound2 \
+    # Add Chinese fonts
+    fonts-noto-cjk \
+    fonts-noto-cjk-extra \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
