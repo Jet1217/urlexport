@@ -26,8 +26,17 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies (this will also download Chromium)
+# Option 1: Use npm ci for production builds (recommended)
+# - Faster and more reliable for CI/CD and production builds
+# - Requires package-lock.json
+# - Won't modify package files
 RUN npm ci
+
+# Option 2: Use npm install for development
+# - More flexible for development
+# - Can update package files
+# - Slower than npm ci
+# RUN npm install
 
 # Copy source code
 COPY . .
