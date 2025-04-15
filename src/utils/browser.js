@@ -12,7 +12,7 @@ const getBrowser = async () => {
     }
 
     const options = {
-        headless: 'new', // Use the new headless mode
+        headless: true, // Use the new headless mode
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -28,11 +28,8 @@ const getBrowser = async () => {
             // Ensure font loading works
             '--enable-remote-fonts',
             // Increase memory to prevent OOM issues
-            '--js-flags=--max-old-space-size=2048',
-            // Add single-process mode to fix QEMU issues
-            '--single-process',
-            // Add additional args from environment
-            ...additionalArgs
+            '--js-flags=--max-old-space-size=2048'
+
         ],
         ignoreHTTPSErrors: true,
         // Add font rendering options
